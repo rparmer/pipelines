@@ -1,0 +1,35 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: podinfo-pipeline-helm
+  namespace: default
+spec:
+  interval: 5m0s
+  url: https://stefanprodan.github.io/podinfo
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: podinfo-pipeline-helm
+  namespace: default
+  labels:
+    pipelines.wego.weave.works/name: example-pipeline
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: podinfo
+      version: ">=4.0.0 <5.0.0"
+      sourceRef:
+        kind: HelmRepository
+        name: podinfo-pipeline-helm
+      interval: 1m
+  values:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 64Mi
+      limits:
+        cpu: 100m
+        memory: 64Mi
