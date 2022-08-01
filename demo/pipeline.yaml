@@ -1,5 +1,5 @@
 ---
-apiVersion: wego.weave.works/v1alpha1
+apiVersion: wego.weave.works/v1alpha2
 kind: Pipeline
 metadata:
   name: example-pipeline
@@ -9,9 +9,12 @@ spec:
     - name: dev
       namespace: dev
       order: 1
-    - name: staging
-      namespace: staging
-      order: 2
-    - name: prod
-      namespace: prod
-      order: 3
+      releaseRef:
+        name: podinfo-pipeline-helm
+        kind: HelmRelease
+    # - name: staging
+    #   namespace: staging
+    #   order: 2
+    # - name: prod
+    #   namespace: prod
+    #   order: 3
