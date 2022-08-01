@@ -5,3 +5,4 @@ resources:
 - staging/
 - prod/
 - pipeline.yaml
+- repository.yaml
