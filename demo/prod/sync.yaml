@@ -1,0 +1,16 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: prod
+  labels:
+    pipelines.wego.weave.works/name: example-pipeline
+spec:
+  interval: 1m0s
+  path: ./demo/prod
+  prune: true
+  force: true
+  sourceRef:
+    kind: GitRepository
+    name: pipelines
+    namespace: flux-system
