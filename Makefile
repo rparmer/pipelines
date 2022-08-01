@@ -9,9 +9,13 @@ manifests: controller-gen
 generate: controller-gen
 	$(CONTROLLER_GEN) object paths="./..."
 
+.PHONY: run-crd
+run-crd:
+	go run . crd
+
 .PHONY: run
 run:
-	go run main.go
+	go run . 
 
 .PHONY: install
 install: generate manifests
