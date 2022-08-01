@@ -85,13 +85,11 @@ spec:
                       items:
                         properties:
                           kind:
-                            description: Kind of the referent.
                             enum:
                             - Kustomization
                             - HelmRelease
                             type: string
                           name:
-                            description: Name of the referent.
                             type: string
                         required:
                         - kind
