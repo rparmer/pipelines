@@ -9,16 +9,20 @@ manifests: controller-gen
 generate: controller-gen
 	$(CONTROLLER_GEN) object paths="./..."
 
+.PHONY: run-crd
+run-crd:
+	go run . crd
+
 .PHONY: run
 run:
-	go run main.go
+	go run . 
 
 .PHONY: install
-install: manifests
+install: generate manifests
 	kubectl apply -f crds
 
 .PHONY: uninstall
-uninstall: manifests
+uninstall: generate manifests
 	kubectl delete -f crds
 
 .PHONY: demo
