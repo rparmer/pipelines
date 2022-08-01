@@ -8,7 +8,7 @@ import (
 
 	helmctrlapi "github.com/fluxcd/helm-controller/api/v2beta1"
 	ksctrlapi "github.com/fluxcd/kustomize-controller/api/v1beta2"
-	pipelineapi "github.com/rparmer/pipelines/api/v1alpha1"
+	pipelineapi "github.com/rparmer/pipelines/api/v1alpha2"
 	appsv1 "k8s.io/api/apps/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
@@ -59,43 +59,36 @@ func main() {
 			fmt.Printf("Stage: %s\n", s.Name)
 			fmt.Println("Versions:")
 
-			// fetch kustomizations associated to the pipeline
-			ks := ksctrlapi.KustomizationList{}
-			if err := c.List(context.Background(), &ks, client.InNamespace(s.Namespace), client.MatchingLabels{
-				PipelineNameLabel: p.Name,
-			}); err != nil {
-				panic(err)
-			}
-
-			for _, k := range ks.Items {
-				// fetch deployments associated to the kustomization
-				ds := appsv1.DeploymentList{}
-				if err := c.List(context.Background(), &ds, client.InNamespace(s.Namespace), client.MatchingLabels{
-					KustomiztionNameLabel: k.Name,
-				}); err != nil {
-					panic(err)
-				}
-				for _, d := range ds.Items {
-					fmt.Printf("\tDeployment/%s: ", d.Name)
-					for idx, ctr := range d.Spec.Template.Spec.Containers {
-						fmt.Printf("%s", strings.Split(ctr.Image, ":")[1])
-						if idx < len(d.Spec.Template.Spec.Containers)-1 {
-							fmt.Printf(", ")
-						}
+			for _, r := range s.ReleaseRefs {
+				if r.Kind == "Kustomization" {
+					k := ksctrlapi.Kustomization{}
+					if err := c.Get(context.Background(), client.ObjectKey{Namespace: s.Namespace, Name: r.Name}, &k); err != nil {
+						panic(err)
 					}
-					fmt.Println()
-				}
-			}
 
-			// fetch helmreleases associated to the pipeline
-			hrs := helmctrlapi.HelmReleaseList{}
-			if err := c.List(context.Background(), &hrs, client.InNamespace(s.Namespace), client.MatchingLabels{
-				PipelineNameLabel: p.Name,
-			}); err != nil {
-				panic(err)
-			}
-			for _, hr := range hrs.Items {
-				fmt.Printf("\tHelmRelease/%s: %s\n", hr.Name, hr.Spec.Chart.Spec.Version)
+					ds := appsv1.DeploymentList{}
+					if err := c.List(context.Background(), &ds, client.InNamespace(s.Namespace), client.MatchingLabels{
+						KustomiztionNameLabel: k.Name,
+					}); err != nil {
+						panic(err)
+					}
+					for _, d := range ds.Items {
+						fmt.Printf("\tDeployment/%s: ", d.Name)
+						for idx, ctr := range d.Spec.Template.Spec.Containers {
+							fmt.Printf("%s", strings.Split(ctr.Image, ":")[1])
+							if idx < len(d.Spec.Template.Spec.Containers)-1 {
+								fmt.Printf(", ")
+							}
+						}
+						fmt.Println()
+					}
+				} else {
+					hr := helmctrlapi.HelmRelease{}
+					if err := c.Get(context.Background(), client.ObjectKey{Namespace: s.Namespace, Name: r.Name}, &hr); err != nil {
+						panic(err)
+					}
+					fmt.Printf("\tHelmRelease/%s: %s\n", hr.Name, hr.Spec.Chart.Spec.Version)
+				}
 			}
 		}
 		if i < len(pipelines.Items)-1 {

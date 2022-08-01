@@ -14,11 +14,11 @@ run:
 	go run main.go
 
 .PHONY: install
-install: manifests
+install: generate manifests
 	kubectl apply -f crds
 
 .PHONY: uninstall
-uninstall: manifests
+uninstall: generate manifests
 	kubectl delete -f crds
 
 .PHONY: demo

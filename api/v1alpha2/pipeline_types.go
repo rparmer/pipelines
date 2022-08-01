@@ -15,7 +15,7 @@ type Stage struct {
 	// +kubebuilder:validation:Minimum=0
 	Order int `json:"order"`
 
-	Release ReleaseReference `json:"releaseRef"`
+	ReleaseRefs []ReleaseReference `json:"releaseRefs"`
 }
 
 // +kubebuilder:storageversion

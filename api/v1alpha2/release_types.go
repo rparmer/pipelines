@@ -1,10 +1,6 @@
 package v1alpha2
 
 type ReleaseReference struct {
-	// API version of the referent.
-	// +optional
-	APIVersion string `json:"apiVersion,omitempty"`
-
 	// Kind of the referent.
 	// +kubebuilder:validation:Enum=Kustomization;HelmRelease
 	// +required
@@ -18,10 +14,3 @@ type ReleaseReference struct {
 	// +optional
 	// Namespace string `json:"namespace,omitempty"`
 }
-
-// func (s *ReleaseReference) String() string {
-// 	if s.Namespace != "" {
-// 		return fmt.Sprintf("%s/%s/%s", s.Kind, s.Namespace, s.Name)
-// 	}
-// 	return fmt.Sprintf("%s/%s", s.Kind, s.Name)
-// }
