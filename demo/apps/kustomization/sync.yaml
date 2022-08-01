@@ -12,6 +12,8 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
   name: podinfo-pipelines
+  labels:
+    pipelines.wego.weave.works/name: example-pipeline
 spec:
   interval: 10m
   sourceRef:

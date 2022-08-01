@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: podinfo-pipeline
-  labels:
-    pipelines.wego.weave.works/name: example-pipeline
 spec:
   minReadySeconds: 3
   revisionHistoryLimit: 5
