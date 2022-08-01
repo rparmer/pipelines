@@ -15,7 +15,8 @@ import (
 )
 
 const (
-	PipelineNameLabel = "pipelines.wego.weave.works/name"
+	PipelineNameLabel     = "pipelines.wego.weave.works/name"
+	KustomiztionNameLabel = "kustomize.toolkit.fluxcd.io/name"
 )
 
 func main() {
@@ -58,22 +59,32 @@ func main() {
 			fmt.Printf("Stage: %s\n", s.Name)
 			fmt.Println("Versions:")
 
-			// fetch deployments associated to the pipeline
-			deploys := appsv1.DeploymentList{}
-			if err := c.List(context.Background(), &deploys, client.InNamespace(s.Namespace), client.MatchingLabels{
+			// fetch kustomizations associated to the pipeline
+			ks := ksctrlapi.KustomizationList{}
+			if err := c.List(context.Background(), &ks, client.InNamespace(s.Namespace), client.MatchingLabels{
 				PipelineNameLabel: p.Name,
 			}); err != nil {
 				panic(err)
 			}
-			for _, d := range deploys.Items {
-				fmt.Printf("\tDeployment/%s: ", d.Name)
-				for idx, ctr := range d.Spec.Template.Spec.Containers {
-					fmt.Printf("%s", strings.Split(ctr.Image, ":")[1])
-					if idx < len(d.Spec.Template.Spec.Containers)-1 {
-						fmt.Printf(", ")
-					}
+
+			for _, k := range ks.Items {
+				// fetch deployments associated to the kustomization
+				ds := appsv1.DeploymentList{}
+				if err := c.List(context.Background(), &ds, client.InNamespace(s.Namespace), client.MatchingLabels{
+					KustomiztionNameLabel: k.Name,
+				}); err != nil {
+					panic(err)
 				}
-				fmt.Println()
+				for _, d := range ds.Items {
+					fmt.Printf("\tDeployment/%s: ", d.Name)
+					for idx, ctr := range d.Spec.Template.Spec.Containers {
+						fmt.Printf("%s", strings.Split(ctr.Image, ":")[1])
+						if idx < len(d.Spec.Template.Spec.Containers)-1 {
+							fmt.Printf(", ")
+						}
+					}
+					fmt.Println()
+				}
 			}
 
 			// fetch helmreleases associated to the pipeline

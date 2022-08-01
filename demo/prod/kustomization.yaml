@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: prod
 resources:
 - ../apps/
+- sync.yaml
 images:
 - name: ghcr.io/stefanprodan/podinfo
   newTag: 6.1.6
