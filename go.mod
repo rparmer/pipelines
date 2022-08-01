@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/fluxcd/helm-controller/api v0.22.2
 	github.com/fluxcd/kustomize-controller/api v0.26.3
-	k8s.io/api v0.24.2
+	k8s.io/api v0.24.3
 	k8s.io/apimachinery v0.24.3
 )
 
@@ -36,7 +36,7 @@ require (
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 	k8s.io/apiextensions-apiserver v0.24.2 // indirect
-	k8s.io/client-go v0.24.2 // indirect
+	k8s.io/client-go v0.24.3 // indirect
 	k8s.io/kube-openapi v0.0.0-20220328201542-3ee0da9b0b42 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )

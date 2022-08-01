@@ -30,3 +30,21 @@ spec:
           kind: HelmRelease
         - name: prod
           kind: Kustomization
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: example-pipeline
+  namespace: flux-system
+data:
+  pipelines: |
+    stages:
+      - name: dev
+        namespace: dev
+        order: 1
+      - name: staging
+        namespace: staging
+        order: 2
+      - name: prod
+        namespace: prod
+        order: 3

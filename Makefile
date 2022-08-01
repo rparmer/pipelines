@@ -13,6 +13,10 @@ generate: controller-gen
 run-crd:
 	go run . crd
 
+.PHONY: run-cm
+run-cm:
+	go run . cm
+
 .PHONY: run
 run:
 	go run . 
