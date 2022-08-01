@@ -15,7 +15,6 @@ import (
 )
 
 const (
-	PipelineNameLabel     = "pipelines.wego.weave.works/name"
 	KustomiztionNameLabel = "kustomize.toolkit.fluxcd.io/name"
 )
 
@@ -52,7 +51,6 @@ func main() {
 
 	// display info for all pipelines
 	for i, p := range pipelines.Items {
-
 		// display pipeline info
 		fmt.Printf("Pipeline: %s\n", p.Name)
 		for _, s := range p.Spec.Stages {
