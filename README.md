@@ -154,6 +154,8 @@ The CRD examples do not address the use of controllers.  If it is decided that a
 
 Overall the hybrid or full CRD approach seem to be best suited for this solution.  The configmap approach will work, but it loses the safe guards and defined structure that the CRDs help provide.  I found it very easy to mess up the configmap data structure and I don't believe it will evolve well as the pipeline project matures.  Below are some summarized tables listing the pros and cons of each approach.
 
+One issue with all these solutions is that the `Kustomization` object may contain multiple deployments.  For example in this demo `podinfo.yaml` and `podinfo-2.yaml` are defined under the same Kustomization and will both show up under the pipeline results.  We can recommend that application teams have a unique Kustomization per deployment, but there isn't a way to enforce that.  On the ui we would need to support this scenario (and that is why I included it in this demo).
+
 ### Hybrid
 | Pros | Cons |
 | ---- | ---- |
