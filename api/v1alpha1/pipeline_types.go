@@ -16,12 +16,24 @@ type Stage struct {
 	Order int `json:"order"`
 }
 
+type StageStatus struct {
+	Kind    string `json:"kind"`
+	Name    string `json:"name"`
+	Version string `json:"version"`
+}
+
+type PipelineStatus struct {
+	Stages map[string][]StageStatus `json:"stages,omitempty"`
+}
+
+// +kubebuilder:subresource:status
 // +kubebuilder:object:root=true
 type Pipeline struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec PipelineSpec `json:"spec,omitempty"`
+	Spec   PipelineSpec   `json:"spec,omitempty"`
+	Status PipelineStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
@@ -35,3 +47,8 @@ type PipelineList struct {
 func init() {
 	SchemeBuilder.Register(&Pipeline{}, &PipelineList{})
 }
+
+const (
+	PipelineNameLabel     = "pipelines.wego.weave.works/name"
+	KustomiztionNameLabel = "kustomize.toolkit.fluxcd.io/name"
+)

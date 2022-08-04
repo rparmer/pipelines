@@ -14,8 +14,11 @@ func main() {
 	} else if len(args) > 0 && args[0] == "cm" {
 		fmt.Println("Lookup using configmap:")
 		cm()
-	} else {
+	} else if len(args) > 0 && args[0] == "labels" {
 		fmt.Println("Lookup using labels:")
 		labels()
+	} else {
+		fmt.Println("Starting controller:")
+		controller()
 	}
 }

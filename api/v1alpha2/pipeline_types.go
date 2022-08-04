@@ -18,13 +18,25 @@ type Stage struct {
 	ReleaseRefs []ReleaseReference `json:"releaseRefs"`
 }
 
+type StageStatus struct {
+	Kind    string `json:"kind"`
+	Name    string `json:"name"`
+	Version string `json:"version"`
+}
+
+type PipelineStatus struct {
+	Stages map[string][]StageStatus `json:"stages,omitempty"`
+}
+
+// +kubebuilder:subresource:status
 // +kubebuilder:storageversion
 // +kubebuilder:object:root=true
 type Pipeline struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec PipelineSpec `json:"spec,omitempty"`
+	Spec   PipelineSpec   `json:"spec,omitempty"`
+	Status PipelineStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
