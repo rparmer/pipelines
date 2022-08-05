@@ -107,6 +107,73 @@ spec:
           kind: Kustomization
 ```
 
+### Multiple CRD Approach
+This approach works to combine the flexibility of the hybrid approach with the declared nature of the crd.  It breaks the pipeline definition into 2 different objects.  `Pipeline` and `PipelineStage`.  The `Pipeline` defines the pipeline environment settings as well as defines a `PipelineStage` reference.  This reference will define the name of a `PipelineStage` object that will be used to define the `Kustomization` and `HelmRelease` objects that get deployed to a particular stage.  
+
+The pipeline definition may look something like this:
+```yaml
+apiVersion: wego.weave.works/v1alpha3
+kind: Pipeline
+metadata:
+  name: example-pipeline
+  namespace: flux-system
+spec:
+  environments:
+  - name: dev
+    stageRef:
+      name: example-pipeline-dev
+      namespace: dev
+  - name: staging
+    stageRef:
+      name: example-pipeline-staging
+      namespace: staging
+  - name: prod
+    stageRef:
+      name: example-pipeline-prod
+      namespace: prod
+```
+and the stage definitions something like this:
+```yaml
+---
+apiVersion: wego.weave.works/v1alpha3
+kind: PipelineStage
+metadata:
+  name: example-pipeline-dev
+  namespace: dev
+spec:
+  releaseRefs:
+  - name: podinfo-pipeline-helm
+    kind: HelmRelease
+  - name: dev
+    kind: Kustomization
+---
+apiVersion: wego.weave.works/v1alpha3
+kind: PipelineStage
+metadata:
+  name: example-pipeline-staging
+  namespace: staging
+spec:
+  releaseRefs:
+  - name: podinfo-pipeline-helm
+    kind: HelmRelease
+  - name: staging
+    kind: Kustomization
+---
+apiVersion: wego.weave.works/v1alpha3
+kind: PipelineStage
+metadata:
+  name: example-pipeline-prod
+  namespace: prod
+spec:
+  releaseRefs:
+  - name: podinfo-pipeline-helm
+    kind: HelmRelease
+  - name: prod
+    kind: Kustomization
+```
+
+The advantage of this approach is that operators still have full control of how the environments are defined and application teams still have the flexability to update their `releaseRefs` as needed.  This also now allows the stage definitions to live right along side the deployment definitions.
+
 ### Configmap Approach
 The configmap approach looks to use existing Kubernetes resources without needing to create any CRDs.  This example mimics the hybrid approach, but it could be changed to mimic the full CRD approach as well.  It does work, but it seems to be very brittle and may be prone to config errors by the consumer.  For the purpose of this POC the cli demo is hard-coded to the configmap example below.  Feel free to play around with the stage definitions, but a configmap with the name `example-pipeline` is required.
 
@@ -167,6 +234,14 @@ One issue with all these solutions is that the `Kustomization` object may contai
 | Pros | Cons |
 | ---- | ---- |
 | Operator control of stage definitions | Not easy for application teams to change deployments |
+| Clear pipeline definition | |
+| RBAC | |
+
+### Multi-CRD
+| Pros | Cons |
+| ---- | ---- |
+| Operator control of environment definitions | Another CRD to manage |
+| Application teams control what deployments belong to a stage | |
 | Clear pipeline definition | |
 | RBAC | |
 

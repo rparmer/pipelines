@@ -5,14 +5,14 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.9.0
   creationTimestamp: null
-  name: pipelines.wego.weave.works
+  name: pipelinestages.wego.weave.works
 spec:
   group: wego.weave.works
   names:
-    kind: Pipeline
-    listKind: PipelineList
-    plural: pipelines
-    singular: pipeline
+    kind: PipelineStage
+    listKind: PipelineStageList
+    plural: pipelinestages
+    singular: pipelinestage
   scope: Namespaced
   versions:
   - name: v1alpha3
@@ -33,38 +33,34 @@ spec:
             type: object
           spec:
             properties:
-              environments:
+              releaseRefs:
                 items:
                   properties:
-                    cluster:
+                    apiVersion:
+                      description: APIVersion of the referent.
                       type: string
-                    group:
+                    kind:
+                      description: Kind of the referent.
+                      enum:
+                      - HelmRelease
+                      - Kustomization
                       type: string
                     name:
+                      description: Name of the referent.
+                      maxLength: 253
+                      minLength: 1
                       type: string
-                    stageRef:
-                      properties:
-                        apiVersion:
-                          description: APIVersion of the referent.
-                          type: string
-                        name:
-                          description: Name of the referent.
-                          maxLength: 253
-                          minLength: 1
-                          type: string
-                        namespace:
-                          description: Namespace of the referent.
-                          maxLength: 63
-                          minLength: 1
-                          type: string
-                      required:
-                      - name
-                      type: object
+                    namespace:
+                      description: Namespace of the referent.
+                      maxLength: 63
+                      minLength: 1
+                      type: string
                   required:
                   - name
-                  - stageRef
                   type: object
                 type: array
+            required:
+            - releaseRefs
             type: object
         type: object
     served: true

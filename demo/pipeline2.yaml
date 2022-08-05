@@ -1,0 +1,55 @@
+apiVersion: wego.weave.works/v1alpha3
+kind: Pipeline
+metadata:
+  name: example-pipeline
+  namespace: flux-system
+spec:
+  environments:
+  - name: dev
+    stageRef:
+      name: example-pipeline-dev
+      namespace: dev
+  - name: staging
+    stageRef:
+      name: example-pipeline-staging
+      namespace: staging
+  - name: prod
+    stageRef:
+      name: example-pipeline-prod
+      namespace: prod
+---
+apiVersion: wego.weave.works/v1alpha3
+kind: PipelineStage
+metadata:
+  name: example-pipeline-dev
+  namespace: dev
+spec:
+  releaseRefs:
+  - name: podinfo-pipeline-helm
+    kind: HelmRelease
+  - name: dev
+    kind: Kustomization
+---
+apiVersion: wego.weave.works/v1alpha3
+kind: PipelineStage
+metadata:
+  name: example-pipeline-staging
+  namespace: staging
+spec:
+  releaseRefs:
+  - name: podinfo-pipeline-helm
+    kind: HelmRelease
+  - name: staging
+    kind: Kustomization
+---
+apiVersion: wego.weave.works/v1alpha3
+kind: PipelineStage
+metadata:
+  name: example-pipeline-prod
+  namespace: prod
+spec:
+  releaseRefs:
+  - name: podinfo-pipeline-helm
+    kind: HelmRelease
+  - name: prod
+    kind: Kustomization

@@ -3,11 +3,11 @@ all: manifests generate install
 
 .PHONY: manifests
 manifests: controller-gen
-	$(CONTROLLER_GEN) crd paths="./api/..." output:crd:artifacts:config=crds
+	$(CONTROLLER_GEN) crd paths="./api/v1alpha3/..." output:crd:artifacts:config=crds
 
 .PHONY: generate
 generate: controller-gen
-	$(CONTROLLER_GEN) object paths="./api/..."
+	$(CONTROLLER_GEN) object paths="./api/v1alpha3/..."
 
 .PHONY: run-crd
 run-crd:

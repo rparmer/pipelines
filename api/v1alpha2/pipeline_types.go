@@ -29,7 +29,6 @@ type PipelineStatus struct {
 }
 
 // +kubebuilder:subresource:status
-// +kubebuilder:storageversion
 // +kubebuilder:object:root=true
 type Pipeline struct {
 	metav1.TypeMeta   `json:",inline"`

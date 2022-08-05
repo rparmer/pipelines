@@ -1,50 +1,50 @@
----
-apiVersion: wego.weave.works/v1alpha2
-kind: Pipeline
-metadata:
-  name: example-pipeline
-  namespace: flux-system
-spec:
-  stages:
-    - name: dev
-      namespace: dev
-      order: 1
-      releaseRefs:
-        - name: podinfo-pipeline-helm
-          kind: HelmRelease
-        - name: dev
-          kind: Kustomization
-    - name: staging
-      namespace: staging
-      order: 2
-      releaseRefs:
-        - name: podinfo-pipeline-helm
-          kind: HelmRelease
-        - name: staging
-          kind: Kustomization
-    - name: prod
-      namespace: prod
-      order: 3
-      releaseRefs:
-        - name: podinfo-pipeline-helm
-          kind: HelmRelease
-        - name: prod
-          kind: Kustomization
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: example-pipeline
-  namespace: flux-system
-data:
-  pipelines: |
-    stages:
-      - name: dev
-        namespace: dev
-        order: 1
-      - name: staging
-        namespace: staging
-        order: 2
-      - name: prod
-        namespace: prod
-        order: 3
+# ---
+# apiVersion: wego.weave.works/v1alpha2
+# kind: Pipeline
+# metadata:
+#   name: example-pipeline
+#   namespace: flux-system
+# spec:
+#   stages:
+#     - name: dev
+#       namespace: dev
+#       order: 1
+#       releaseRefs:
+#         - name: podinfo-pipeline-helm
+#           kind: HelmRelease
+#         - name: dev
+#           kind: Kustomization
+#     - name: staging
+#       namespace: staging
+#       order: 2
+#       releaseRefs:
+#         - name: podinfo-pipeline-helm
+#           kind: HelmRelease
+#         - name: staging
+#           kind: Kustomization
+#     - name: prod
+#       namespace: prod
+#       order: 3
+#       releaseRefs:
+#         - name: podinfo-pipeline-helm
+#           kind: HelmRelease
+#         - name: prod
+#           kind: Kustomization
+# ---
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: example-pipeline
+#   namespace: flux-system
+# data:
+#   pipelines: |
+#     stages:
+#       - name: dev
+#         namespace: dev
+#         order: 1
+#       - name: staging
+#         namespace: staging
+#         order: 2
+#       - name: prod
+#         namespace: prod
+#         order: 3
